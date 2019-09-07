@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Food Tracker | Day{% endblock %}
+
+{% block content %}
+
+    <div class="container col-sm-6 col-sm-offset-3" role="main">
+      <div class="row">
+        <div>
+          <div class="card">
+            <div class="card-header text-light bg-primary">
+              <h3 class="card-title">{{ pretty_date }}</h3>
+            </div>
+            <div class="card-body">
+              <form method="POST" action="{{ url_for('view', date=entry_date)}}">
+                <div class="form-group">
+                  <select class="form-control" name="food-select">
+                    {% for food in food_results %}
+                    <option value="{{ food.id }}">{{ food.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+              </form>
+              
+              <div class="pb-2 mt-4 mb-2 border-bottom"></div>
+              <div>
+                <ul class="nav nav-pills" role="tablist">
+                  <li class="nav-item"><a class="nav-link active">Total</a></li>
+                  <li class="nav-item"><a class="nav-link">Protein: <span class="badge badge-pill badge-secondary">{{total_protein}}</span></a></li>
+                  <li class="nav-item"><a class="nav-link">Carbohydates: <span class="badge badge-pill badge-secondary">{{total_carbohydrates}}</span></a></li>
+                  <li class="nav-item"><a class="nav-link">Fat: <span class="badge badge-pill badge-secondary">{{total_fat}}</span></a></li>
+                  <li class="nav-item"><a class="nav-link">Calories: <span class="badge badge-pill badge-secondary">{{total_calories}}</span></a></li>
+                </ul>
+              </div>
+              
+            </div>
+            
+            {% for r in log_results %}
+            <div class="card-body">
+              <div class="pb-2 mt-4 mb-2 border-bottom"></div>
+              <div>
+                <ul class="nav nav-pills" role="tablist">
+                  <li class="nav-item"><a class="nav-link active">{{ r['name'] }}</a></li>
+                  <li class="nav-item"><a class="nav-link">Protein: <span class="badge badge-pill badge-secondary">{{ r['protein'] }}</span></a></li>
+                  <li class="nav-item"><a class="nav-link">Carbohydates: <span class="badge badge-pill badge-secondary">{{ r['carbohydrates'] }}</span></a></li>
+                  <li class="nav-item"><a class="nav-link">Fat: <span class="badge badge-pill badge-secondary">{{ r['fat'] }}</span></a></li>
+                  <li class="nav-item"><a class="nav-link">Calories: <span class="badge badge-pill badge-secondary">{{ r['calories'] }}</span></a></li>
+                </ul>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+    
+
+    
