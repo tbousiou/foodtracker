@@ -21,11 +21,24 @@ def index():
 		db.execute('insert into log_date (entry_date) values (?)', [user_date])
 		db.commit()
 
-	query = 'select entry_date from log_date order by entry_date desc'
+	#query = 'select entry_date from log_date order by entry_date desc'
+	query = """	select log_date.entry_date,
+				sum(food.protein) as sumprotein,
+    			sum(food.carbohydrates) as sumcarbohydrates,
+			    sum(food.fat) as sumfat,
+			    sum(food.calories) as sumcalories
+				from food
+				join food_date
+				on food.id = food_date.food_id
+				join log_date
+				on log_date.id = food_date.log_date_id
+				group by log_date.entry_date
+				order by log_date.entry_date desc
+	 		"""
 	cur = db.execute(query)
 	results = cur.fetchall()
-	
-	log_dates = [ {'pretty_date': datetime.strftime(datetime.strptime(day['entry_date'], '%Y-%m-%d'), '%B %d, %Y'), 'entry_date': day['entry_date'] } for day in results ]
+	# This is very long FIX IT!
+	log_dates = [ {'pretty_date': datetime.strftime(datetime.strptime(day['entry_date'], '%Y-%m-%d'), '%B %d, %Y'), 'entry_date': day['entry_date'], 'sumprotein': day['sumprotein'], 'sumcarbohydrates': day['sumcarbohydrates'], 'sumfat': day['sumfat'], 'sumcalories': day['sumcalories'] } for day in results ]
 	return render_template('home.html', log_dates=log_dates)
 
 @app.route('/view/<date>', methods = ['GET', 'POST'])
